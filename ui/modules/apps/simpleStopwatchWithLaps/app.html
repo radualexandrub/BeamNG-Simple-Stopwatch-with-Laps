@@ -1,0 +1,48 @@
+<div class="sw-shell" ng-class="{ 'sw-shell--running': vm.running }">
+
+  <div class="sw-clock" >{{ vm.clock }}</div>
+
+  <div class="sw-elapsed">{{ vm.elapsed }}</div>
+
+  <div class="sw-controls">
+    <button class="sw-btn sw-btn--primary"
+            ng-if="!vm.running"
+            ng-click="start()"
+            title="Start">&#9654;</button>
+    <button class="sw-btn sw-btn--primary sw-btn--stop"
+            ng-if="vm.running"
+            ng-click="stop()"
+            title="Pause">&#8214;</button>
+    <button class="sw-btn sw-btn--lap"
+            ng-click="lap()"
+            ng-disabled="!vm.running"
+            title="Lap">&#8857;</button>
+    <button class="sw-btn sw-btn--reset"
+            ng-click="reset()"
+            title="Reset Current Lap">&#8635;</button>
+    <button class="sw-btn sw-btn--trash"
+            ng-click="trash()"
+            title="Clear All Laps">&#128465;</button>
+  </div>
+
+  <div class="sw-laps" ng-show="vm.laps.length > 0">
+    <div class="sw-laps__header">
+      <span>LAP</span>
+      <span>SPLIT</span>
+      <span>TOTAL</span>
+    </div>
+    <div class="sw-laps__scroll">
+      <div class="sw-lap-row"
+          ng-repeat="lap in (vm.laps | orderBy: '-index') track by lap.index">
+        <span class="sw-lap-row__num">{{ lap.index }}</span>
+        <span class="sw-lap-row__split">{{ lap.split }}</span>
+        <span class="sw-lap-row__total">{{ lap.total }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sw-empty" ng-show="vm.laps.length === 0 && !vm.running">
+    Press &#9654; to start
+  </div>
+  <link type="text/css" rel="stylesheet" href="/ui/modules/apps/simpleStopwatchWithLaps/app.css"/>
+</div>

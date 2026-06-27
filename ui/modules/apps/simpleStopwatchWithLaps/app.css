@@ -1,0 +1,255 @@
+/* =============================================================================
+   app.css  —  simpleStopwatchWithLaps
+   Design direction: pit-lane data display — monospaced timing, dark cockpit
+   palette, single accent pulled from motorsport timing screens (amber).
+   ============================================================================= */
+
+/* ── Reset / base ──────────────────────────────────────────────────────────── */
+.sw-shell *,
+.sw-shell *::before,
+.sw-shell *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Shell ─────────────────────────────────────────────────────────────────── */
+.sw-shell {
+  --c-bg:       hsla(200, 10%, 6%, 0.5);
+  --c-bg-darker:hsla(0, 0%, 0%, 0.3);
+  --c-surface:  #161a1c;
+  --c-border:   #252b2e;
+  --c-amber:    hsla(37, 91%, 55%, 0.7);
+  --c-amber-dim:#a06a10;
+  --c-text:     #ffffff;
+  --c-muted:    #ececec;
+  --c-green:    #17853b;
+  --c-red:      #e05555;
+  --radius:     4px;
+  --font-mono:  'Roboto Mono', 'Courier New', monospace;
+  --font-ui:    'Roboto', Arial, sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: var(--c-bg);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-family: var(--font-ui);
+  color: var(--c-text);
+
+  /* Signature element: left amber side-rule that pulses when running */
+  border-left: 3px solid var(--c-border);
+  transition: border-left-color 0.3s ease;
+}
+
+.sw-shell--running {
+  border-left-color: var(--c-amber);
+}
+
+/* ── Clock ─────────────────────────────────────────────────────────────────── */
+.sw-clock {
+  background-color: var(--c-bg-darker);
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--c-muted);
+  text-transform: uppercase;
+  text-align: center;
+  padding: 6px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+/* ── Elapsed display ───────────────────────────────────────────────────────── */
+.sw-elapsed {
+  font-family: var(--font-mono);
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  text-align: center;
+  padding: 8px 10px 4px;
+  line-height: 1;
+
+  /* Amber glow on elapsed when running */
+  transition: text-shadow 0.2s ease;
+}
+
+.sw-shell--running .sw-elapsed {
+  text-shadow: 0 0 18px rgba(245, 166, 35, 0.7);
+}
+
+/* ── Controls ──────────────────────────────────────────────────────────────── */
+.sw-controls {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 10px;
+}
+
+.sw-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  background: var(--c-surface);
+  color: var(--c-text);
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  line-height: 1;
+  font-family: var(--font-ui);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.sw-btn:hover:not(:disabled) {
+  background: #1e2427;
+  border-color: var(--c-amber-dim);
+  color: #ffffff;
+}
+
+.sw-btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.sw-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Primary (Start/Stop) */
+.sw-btn--primary {
+  border-color: var(--c-amber-dim);
+  color: var(--c-amber);
+}
+
+.sw-btn--primary:hover:not(:disabled) {
+  background: rgba(245, 166, 35, 0.12);
+  border-color: var(--c-amber);
+}
+
+.sw-btn--stop {
+  border-color: #7a3030;
+  color: var(--c-red);
+}
+
+.sw-btn--stop:hover:not(:disabled) {
+  background: rgba(224, 85, 85, 0.12);
+  border-color: var(--c-red);
+}
+
+/* Lap */
+.sw-btn--lap {
+  color: var(--c-green);
+  border-color: #1a5c30;
+}
+
+.sw-btn--lap:hover:not(:disabled) {
+  background: rgba(41, 209, 96, 0.1);
+  border-color: var(--c-green);
+}
+
+/* Reset and Trash buttons */
+.sw-btn--trash {
+  color: var(--c-red);
+  font-size: 20px;
+}
+
+.sw-btn--reset {
+  font-size: 18px;
+}
+
+/* ── Lap table ─────────────────────────────────────────────────────────────── */
+.sw-laps {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-top: 1px solid var(--c-border);
+  margin-top: 2px;
+}
+
+.sw-laps__header {
+  display: grid;
+  grid-template-columns: 28px 1fr 1fr;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--c-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+
+.sw-laps__scroll {
+  overflow-y: auto;
+  flex: 1;
+  /* Thin scrollbar for compact widget */
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-border) transparent;
+}
+
+.sw-laps__scroll::-webkit-scrollbar {
+  width: 3px;
+}
+
+.sw-laps__scroll::-webkit-scrollbar-thumb {
+  background: var(--c-border);
+  border-radius: 2px;
+}
+
+.sw-lap-row {
+  display: grid;
+  grid-template-columns: 28px 1fr 1fr;
+  gap: 4px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  border-bottom: 1px solid rgba(37, 43, 46, 0.6);
+  transition: background 0.1s;
+}
+
+.sw-lap-row:hover {
+  background: var(--c-surface);
+}
+
+/* First row in the reversed list = most recent lap */
+.sw-lap-row:first-child {
+  background: rgba(245, 166, 35, 0.06);
+}
+
+.sw-lap-row__num {
+  color: var(--c-muted);
+}
+
+.sw-lap-row__split {
+  color: var(--c-amber);
+}
+
+.sw-lap-row__total {
+  color: var(--c-text);
+  opacity: 0.75;
+}
+
+/* ── Empty state ───────────────────────────────────────────────────────────── */
+.sw-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--c-muted);
+  letter-spacing: 0.1em;
+}

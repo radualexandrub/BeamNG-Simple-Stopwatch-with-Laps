@@ -1,0 +1,17 @@
+{
+  "name": "Simple Stopwatch with Laps",
+  "directive": "simpleStopwatchWithLaps",
+  "domElement": "<simple-stopwatch-with-laps></simple-stopwatch-with-laps>",
+  "author": "Radu Alexandru",
+  "version": "1.0.0",
+  "description": "A simple lap stopwatch with a real-world clock display.",
+  "author_description": "Manually tracks lap times and displays current system time.",
+  "categories": ["general"],
+  "types": [ "ui.apps.categories.info" ],
+  "css": { 
+    "width": "210px", 
+    "height": "280px", 
+    "left": "640px", 
+    "bottom": "0px" 
+  }
+}
