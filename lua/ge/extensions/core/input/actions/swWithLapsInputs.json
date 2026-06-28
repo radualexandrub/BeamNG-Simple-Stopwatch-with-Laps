@@ -1,0 +1,16 @@
+{
+  "toggleSwWithLaps": {
+    "cat":   "general",
+    "order": 997,
+    "onChange": "extensions.swWithLaps.toggle(VALUE)",
+    "title": "Stopwatch: Start / Pause",
+    "desc":  "Starts or pauses the lap stopwatch"
+  },
+  "lapSwWithLaps": {
+    "cat":   "general",
+    "order": 998,
+    "onChange": "extensions.swWithLaps.storeLap(VALUE)",
+    "title": "Stopwatch: Store Lap",
+    "desc":  "Records the current lap split and resets the lap display to zero"
+  }
+}

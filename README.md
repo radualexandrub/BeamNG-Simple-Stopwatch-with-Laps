@@ -1,8 +1,14 @@
 # Simple Stopwatch with Laps - BeamNG.drive UI Mod
 
+A simple manual lap stopwatch with real-world clock display.
+
 ![Simple Stopwatch with Laps BeamNg Mod](./ui/modules/apps/simpleStopwatchWithLaps/app.png)
 
-A simple manual lap stopwatch with real-world clock display.  
+<br/>
+
+## Changelog, Features
+
+**Release V1.0.0 on Friday, June 26, 2026:**
 
 It features the normal stopwatch functions:
 - START/PAUSE: to togghle the timer
@@ -12,27 +18,55 @@ It features the normal stopwatch functions:
 
 It also shows at the top the your Local system clock.
 
+![Simple Stopwatch with Laps BeamNg Mod](./demos-and-releases/SimpleStopwatch_v1.0.0_Demo.gif)
+
+</br>
+
+**Release V1.1.0 on Sunday, June 28, 2026:**
+
+Support for Keyboard/Controller/Wheel Input was added:
+- Toggle Start/Pause
+- Store Lap, that resets main stopwatch display to 00:00:00 and continues the timer
+    - Additional feature: If the timer is stopped and set on 00:00:00, LAP button will start the timer (Useful if you only want 1 button for starting hotlapping)
+
+![Simple Stopwatch with Laps BeamNg with Keyboard Input](./demos-and-releases/SimpleStopwatch_v1.1.0_KeyboardInput.jpg)
+
+</br>
+
+## Official Posts in BeamNg forum
+
+https://www.beamng.com/threads/simple-stopwatch-with-laps-and-system-clock.110155/
+
 <br/>
 
 ## Installation
 
-For Regular use: Copy the the zip archive into your BeamNG user mods folder, e.g.: `C:\Users\<your_username>\AppData\Local\BeamNG\BeamNG.drive\current\mods`
+For Regular use: Copy the released zip archive into your BeamNG user mods folder, e.g.: `C:\Users\<your_username>\AppData\Local\BeamNG\BeamNG.drive\current\mods`
 
-For Development: Copy the mod folder or archive into your BeamNG user mods folder, e.g.:
+For Development (Windows): Copy the mod folder or archive into your BeamNG user mods folder:
 
 ```
-C:\Users\<you>\AppData\Local\BeamNG\BeamNG.drive\current\mods
-└── mods/
-    └── unpacked/
-        └── simpleStopwatchWithLaps/
-            └── ui/
-                └── apps/
-                    └── simpleStopwatchWithLaps/
-                        ├── app.html
-                        ├── app.js
-                        ├── app.css
-                        ├── app.json
-                        └── app.png
+C:\Users\<your_user>\AppData\Local\BeamNG\BeamNG.drive\current\mods\unpacked\
+└── simpleStopwatchWithLaps/
+    ├── ui/
+    │   └── apps/
+    │       └── simpleStopwatchWithLaps/
+    │           ├── app.html
+    │           ├── app.js
+    │           ├── app.css
+    │           ├── app.json
+    |           └── app.png
+    ├── lua/
+    │   ├── ge/
+    │   │   └── extensions/
+    │   │       ├── core/input/actions/
+    │   │       │   └── swWithLapsInputs.json ← registers bindings in Controls menu
+    │   │       └── swWithLaps.lua ← GE-context: receives input, relays to vehicle
+    │   └── vehicle/
+    │       └── extensions/auto/
+    │           └── swWithLaps.lua ← Vehicle-context: sets electrics the UI reads
+    └── ui/apps/simpleStopwatchWithLaps/
+        └── app.js
 ```
 
 > **Note:** Do **not** place files directly inside the `BeamNG.drive/` user folder.
@@ -62,6 +96,12 @@ To see the changes in real time in the game while changing this UI App Mod code:
 - Then press F5
 
 Also, you can press CTRL+L to Reload All LUA scripts (basically all the game) if there are changes to the mod properties.
+
+<br/>
+
+## Known issues
+
+- When opening the BeamNg Radial UI from Xbox Controller, the stopwatch is completely reset and all laps are lost.
 
 <br/>
 
