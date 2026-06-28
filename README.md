@@ -11,7 +11,7 @@ A simple manual lap stopwatch with real-world clock display.
 **Release V1.0.0 on Friday, June 26, 2026:**
 
 It features the normal stopwatch functions:
-- START/PAUSE: to togghle the timer
+- START/PAUSE: to toggle the timer
 - STORE LAP time: to capture your current lap split and total session time, and reset the main display to zero for your next lap
 - STOP/SOFT RESET timer: to pause and reset to zero the main display without deleting all the stored laps
 - TRASH/DELETE: Wipes all the laps and RESETs timer
