@@ -26,6 +26,9 @@ angular.module('beamng.apps').directive('simpleStopwatchWithLaps', [function () 
       let accum = 0;
       let timerInterval = null;
 
+      const LAPS_STORAGE_KEY = 'simpleStopwatchWithLaps_laps';
+      const ACCUM_STORAGE_KEY = 'simpleStopwatchWithLaps_accum';
+
       // Formatting function (milliseconds to MM:SS.cs)
       function formatTime(ms) {
         let totalSeconds = Math.floor(ms / 1000);
@@ -76,6 +79,11 @@ angular.module('beamng.apps').directive('simpleStopwatchWithLaps', [function () 
         if (scope.vm.running) {
           accum += (performance.now() - startTime);
           scope.vm.running = false;
+
+          // Persist the accumulator to localStorage
+          try {
+            localStorage.setItem(ACCUM_STORAGE_KEY, JSON.stringify(accum));
+          } catch (e) {}
         }
       };
 
@@ -100,7 +108,12 @@ angular.module('beamng.apps').directive('simpleStopwatchWithLaps', [function () 
           scope.vm.lapCount = scope.vm.laps.length;
           
           // Force an immediate visual reset of the elapsed timer
-          scope.vm.elapsed = '00:00.00'; 
+          scope.vm.elapsed = '00:00.00';
+
+          // Persist laps to localStorage
+          try {
+            localStorage.setItem(LAPS_STORAGE_KEY, JSON.stringify(scope.vm.laps));
+          } catch (e) {}
         }
       };
 
@@ -113,6 +126,11 @@ angular.module('beamng.apps').directive('simpleStopwatchWithLaps', [function () 
         
         // Rewind the hidden session total back to the end of the last lap
         accum = lastLapMs; 
+
+        // Persist the accumulator to localStorage
+        try {
+          localStorage.setItem(ACCUM_STORAGE_KEY, JSON.stringify(accum));
+        } catch (e) {}
         
         // Snap the UI back to zero
         scope.vm.elapsed = '00:00.00';
@@ -125,10 +143,42 @@ angular.module('beamng.apps').directive('simpleStopwatchWithLaps', [function () 
         scope.vm.elapsed = '00:00.00';
         scope.vm.laps = [];
         scope.vm.lapCount = 0;
+
+        // Remove persisted laps and accumulator from localStorage
+        try {
+          localStorage.removeItem(LAPS_STORAGE_KEY);
+          localStorage.removeItem(ACCUM_STORAGE_KEY);
+        } catch (e) {}
+
         tick();
       };
 
       // --- Initialization ---
+      // Retrieve any laps and accumulator previously stored in localStorage
+      try {
+        const storedLaps = JSON.parse(localStorage.getItem(LAPS_STORAGE_KEY) || '[]');
+        scope.vm.laps = storedLaps;
+        scope.vm.lapCount = storedLaps.length;
+
+        let lastLapMs = storedLaps.length > 0 ? storedLaps[storedLaps.length - 1]._rawTotal : 0;
+
+        const storedAccum = JSON.parse(localStorage.getItem(ACCUM_STORAGE_KEY));
+        // accum can never be less than the last lap's total (same invariant reset() relies on), 
+        // clamp up to lastLapMs if storage is stale,
+        // e.g. laps were taken mid-run without an explicit stop/reset in between.
+        accum = (typeof storedAccum === 'number' && !isNaN(storedAccum) && storedAccum >= lastLapMs)
+          ? storedAccum
+          : lastLapMs;
+
+        // Show the correct paused offset instead of jumping back to zero
+        scope.vm.elapsed = formatTime(accum - lastLapMs);
+      } catch (e) {
+        scope.vm.laps = [];
+        scope.vm.lapCount = 0;
+        accum = 0;
+        scope.vm.elapsed = '00:00.00';
+      }
+
       updateClock();
       timerInterval = setInterval(tick, 50);
 
