@@ -12,13 +12,14 @@ angular.module('beamng.apps').directive('simpleStopwatchWithLaps', [function () 
     templateUrl: '/ui/modules/apps/simpleStopwatchWithLaps/app.html',
     replace: true,
     link: function (scope) {
-
       scope.vm = {
         running:  false,
         elapsed:  '00:00.00',
         lapCount: 0,
         laps:     [],
         clock:    '',
+        vehicleModel: 'No Vehicle',
+        vehicleConfig: '',
       };
 
       // Internal JS state
@@ -38,6 +39,15 @@ angular.module('beamng.apps').directive('simpleStopwatchWithLaps', [function () 
 
         let pad = (n) => n.toString().padStart(2, '0');
         return `${pad(mins)}:${pad(secs)}.${pad(cs)}`;
+      }
+
+      // Turns a raw jbeam folder name (e.g. "etk800", "legran") into
+      // into a prettier car name for the UI
+      function prettifyModelName(raw) {
+        if (!raw) return 'No Vehicle';
+        return raw
+          .replace(/_/g, ' ')
+          .replace(/\b\w/g, (c) => c.toUpperCase());
       }
 
       // Real-time system clock generator
@@ -153,6 +163,7 @@ angular.module('beamng.apps').directive('simpleStopwatchWithLaps', [function () 
         tick();
       };
 
+      // ----------------------
       // --- Initialization ---
       // Retrieve any laps and accumulator previously stored in localStorage
       try {
@@ -182,6 +193,21 @@ angular.module('beamng.apps').directive('simpleStopwatchWithLaps', [function () 
       updateClock();
       timerInterval = setInterval(tick, 50);
 
+      // --- Vehicle model tracking ---
+      // Listen for pushes from the GE-side extension (fires on vehicle switch).
+      // scope.$on('swVehicleModelChanged', function (event, rawModel) {
+      //   scope.vm.vehicleModel = prettifyModelName(rawModel);
+      //   scope.$applyAsync();
+      // });
+      scope.$on('swVehicleInfoChanged', function (event, info) {
+        scope.vm.vehicleModel = prettifyModelName(info && info.model);
+        scope.vm.vehicleConfig = (info && info.config) ? prettifyModelName(info.config) : '';
+        scope.$applyAsync();
+      });
+      // Ask for the current value right away, in case the extension already
+      // fired its one-time onExtensionLoaded push before this app existed.
+      bngApi.engineLua('extensions.swWithLaps.sendVehicleInfo()');
+
       scope.$on('$destroy', function () {
         clearInterval(timerInterval);
       });
@@ -196,6 +222,9 @@ angular.module('beamng.apps').directive('simpleStopwatchWithLaps', [function () 
     // stays 1 for every UI frame while the key is held. Without edge detection,
     // toggle() would fire ~20× per second and flip-flop the timer. We act only
     // on the 0→1 transition so each physical keypress = exactly one action.
+    //
+    // Note: bngApi is automatically injected into the controller by BeamNG's AngularJS environment
+    // bngApi.engineLua('extensions.exampleMod.modifyMessage("' + $scope.message + '")')
     controller: ['$scope', function ($scope) {
 
       let prevToggle = 0;

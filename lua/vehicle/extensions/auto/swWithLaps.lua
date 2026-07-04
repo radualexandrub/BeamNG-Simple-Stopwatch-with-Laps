@@ -8,7 +8,7 @@
 -- About this file:
 -- Vehicle extension — runs inside the car's sandbox.
 -- Sets electrics.values, which BeamNG streams to the JS UI automatically.
-local M = {}
+local vehicleExtension = {}
 
 electrics.values['sw_toggle'] = 0
 electrics.values['sw_lap']    = 0
@@ -21,7 +21,7 @@ local function storeLap(VALUE)
   electrics.values['sw_lap'] = VALUE
 end
 
-M.toggle   = toggle
-M.storeLap = storeLap
+vehicleExtension.toggle   = toggle
+vehicleExtension.storeLap = storeLap
 
-return M
+return vehicleExtension

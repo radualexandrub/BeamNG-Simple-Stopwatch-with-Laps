@@ -44,5 +44,12 @@
   <div class="sw-empty" ng-show="vm.laps.length === 0 && !vm.running">
     Press &#9654; to start
   </div>
+  <div class="sw-empty" ng-show="vm.laps.length === 0 && vm.running">
+    Press &#8857; to lap
+  </div>
+
+  <div class="sw-clock">
+    {{ vm.vehicleModel }}<span ng-if="vm.vehicleConfig"> - {{ vm.vehicleConfig }}</span>
+  </div>
   <link type="text/css" rel="stylesheet" href="/ui/modules/apps/simpleStopwatchWithLaps/app.css"/>
 </div>

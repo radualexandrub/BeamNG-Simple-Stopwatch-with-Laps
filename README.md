@@ -1,6 +1,6 @@
 # Simple Stopwatch with Laps - BeamNG.drive UI Mod
 
-A simple manual lap stopwatch with real-world clock display.
+A simple manual lap stopwatch with real-world clock display, key inputs and stored laps.
 
 ![Simple Stopwatch with Laps BeamNg Mod](./ui/modules/apps/simpleStopwatchWithLaps/app.png)
 
@@ -20,7 +20,7 @@ It also shows at the top the your Local system clock.
 
 ![Simple Stopwatch with Laps BeamNg Mod](./demos-and-releases/SimpleStopwatch_v1.0.0_Demo.gif)
 
-</br>
+<br/>
 
 **Release V1.1.0 on Sunday, June 28, 2026:**
 
@@ -31,7 +31,22 @@ Support for Keyboard/Controller/Wheel Input was added:
 
 ![Simple Stopwatch with Laps BeamNg with Keyboard Input](./demos-and-releases/SimpleStopwatch_v1.1.0_KeyboardInput.jpg)
 
-</br>
+<br/>
+
+**Release V1.1.1 on Friday, July 03, 2026:**
+
+- Fix disappearing stored laps when user checks the map or the dial menu
+- Stored laps are now saved to localStorage
+
+<br/>
+
+**Release V1.2 on Saturday, July 04, 2026:**
+
+- Added car name and model (configuration) in UI
+
+![Simple Stopwatch with Laps BeamNg v1.2 Show car model](./demos-and-releases/SimpleStopwatch_v1.2_CarName.jpg)
+
+<br/>
 
 ## Official Posts in BeamNg forum
 
