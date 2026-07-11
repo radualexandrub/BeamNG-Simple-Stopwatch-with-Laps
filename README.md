@@ -48,6 +48,12 @@ Support for Keyboard/Controller/Wheel Input was added:
 
 <br/>
 
+**Release V1.3 on Saturday, July 11, 2026:**
+
+- Pause the stopwatch when pausing the game (e.g. via "J" key) or entering the game menu (via "ESC" key). Resume on unpause.
+
+<br/>
+
 ## Official Posts in BeamNg forum
 
 https://www.beamng.com/threads/simple-stopwatch-with-laps-and-system-clock.110155/
@@ -111,12 +117,6 @@ To see the changes in real time in the game while changing this UI App Mod code:
 - Then press F5
 
 Also, you can press CTRL+L to Reload All LUA scripts (basically all the game) if there are changes to the mod properties.
-
-<br/>
-
-## Known issues
-
-- When opening the BeamNg Radial UI from Xbox Controller, the stopwatch is completely reset and all laps are lost.
 
 <br/>
 

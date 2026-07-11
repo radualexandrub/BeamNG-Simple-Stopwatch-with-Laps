@@ -9,6 +9,7 @@
 -- GE (engine) extension — receives keybinds, relays to the active vehicle.
 local extension = {}
 
+-- --- Key bindings for toggling the stopwatch and storing a lap ---
 local function toggle(value)
   local playerVehicle = be:getPlayerVehicle(0)
   if playerVehicle then
@@ -24,6 +25,7 @@ local function storeLap(value)
   end
 end
 
+-- --- Vehicle info to the UI ---
 -- Pulls the applied .pc config filename out of the player vehicle data table
 -- and strips it down to just the config identifier (e.g. "base_M").
 -- Defensive because the exact table shape has moved between BeamNG versions.
@@ -64,11 +66,36 @@ local function onExtensionLoaded()
   sendVehicleInfo()
 end
 
--- Public API exports for BeamNG's extension framework
+-- --- In game-pause detection ---
+-- dtSim collapses to 0 while the sim is paused (Esc menu, J-key, etc.), while
+-- dtReal keeps advancing every rendered frame. Comparing the two lets us detect
+-- pause/unpause directly from sim state instead of racing an input keypress.
+local PAUSE_EPS         = 0.0001 -- treat "basically zero" as paused
+local FRAMES_TO_CONFIRM = 2      -- debounce so a single frame hitch can't false-trigger
+local isPaused          = false
+local pendingFrames     = 0
+
+local function onUpdate(dtReal, dtSim, dtRaw)
+  local looksPaused = (dtSim <= PAUSE_EPS) and (dtReal > PAUSE_EPS)
+
+  if looksPaused ~= isPaused then
+    pendingFrames = pendingFrames + 1
+    if pendingFrames >= FRAMES_TO_CONFIRM then
+      isPaused      = looksPaused
+      pendingFrames = 0
+      guihooks.trigger('swWithLapsGamePause', isPaused)
+    end
+  else
+    pendingFrames = 0
+  end
+end
+
+-- --- Public API exports for BeamNG's extension framework ---
 extension.toggle            = toggle
 extension.storeLap          = storeLap
 extension.sendVehicleInfo   = sendVehicleInfo
 extension.onVehicleSwitched = onVehicleSwitched
 extension.onExtensionLoaded = onExtensionLoaded
+extension.onUpdate = onUpdate
 
 return extension

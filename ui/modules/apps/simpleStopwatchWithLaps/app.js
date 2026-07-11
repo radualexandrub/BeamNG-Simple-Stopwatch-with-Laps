@@ -254,6 +254,28 @@ angular.module('beamng.apps').directive('simpleStopwatchWithLaps', [function () 
           prevLap    = lap;
         });
       });
+
+      // --- React to the game itself pausing/unpausing (Esc menu, J-key, etc.) ---
+      // Fired from lua/ge/extensions/swWithLaps.lua's onUpdate via guihooks.trigger.
+      // Remember whether the watch was actually running before the pause to not
+      // auto-start it on unpause if it was already stopped
+      let wasRunningBeforeGamePause = false;
+      $scope.$on('swWithLapsGamePause', function (event, paused) {
+        $scope.$evalAsync(function () {
+          if (paused) {
+            wasRunningBeforeGamePause = $scope.vm.running;
+            if ($scope.vm.running) {
+              $scope.stop();
+            }
+          } else {
+            if (wasRunningBeforeGamePause) {
+              $scope.start();
+            }
+            wasRunningBeforeGamePause = false;
+          }
+        });
+      });
+
     }]
   };
 }]);

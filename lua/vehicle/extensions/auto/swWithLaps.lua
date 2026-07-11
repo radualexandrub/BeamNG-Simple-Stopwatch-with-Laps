@@ -5,9 +5,9 @@
 -- the Free Software Foundation, either version 3 of the License, or
 -- (at your option) any later version.   
 
--- About this file:
--- Vehicle extension — runs inside the car's sandbox.
--- Sets electrics.values, which BeamNG streams to the JS UI automatically.
+-- About this file (vehicle context):
+-- Vehicle extension - runs inside the car's sandbox
+-- Sets electrics.values, which BeamNG streams to the JS UI automatically
 local vehicleExtension = {}
 
 electrics.values['sw_toggle'] = 0
